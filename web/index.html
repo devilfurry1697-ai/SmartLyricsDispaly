@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Lyrics Display</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 25px 15px;
+      background: #10121a;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ff99;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #a8adbd;
+      margin-bottom: 25px;
+    }
+
+    .panel {
+      background: #1c2030;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    textarea, input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #42485d;
+      background: #10121a;
+      color: white;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #00ff99;
+      color: #10121a;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    button.secondary {
+      background: #343a50;
+      color: white;
+    }
+
+    .display {
+  min-height: 100px;
+  padding: 20px;
+  border-radius: 10px;
+  background: black;
+  color: #00ff99;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#preview {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  text-align: center;
+}
+
+#preview.scrolling {
+  animation: scrollLyrics 10s linear infinite;
+}
+
+@keyframes scrollLyrics {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+    .status {
+      text-align: center;
+      color: #a8adbd;
+      font-size: 14px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>♪ Smart Lyrics</h1>
+    <p class="subtitle">Your personal RGB lyrics display</p>
+
+    <div class="panel">
+      <label for="lyrics">Enter your lyrics</label>
+
+      <textarea id="lyrics"
+        placeholder="Paste your lyrics here..."></textarea>
+
+      <label for="color">Text colour</label>
+      <select id="color">
+        <option value="#00ff99">Green</option>
+        <option value="#ff3333">Red</option>
+        <option value="#3399ff">Blue</option>
+        <option value="#ff00ff">Magenta</option>
+        <option value="#ffffff">White</option>
+      </select>
+
+      <label for="speed">Scrolling speed</label>
+      <select id="speed">
+        <option value="slow">Slow</option>
+        <option value="normal" selected>Normal</option>
+        <option value="fast">Fast</option>
+      </select>
+
+      <button onclick="showLyrics()">Display Lyrics</button>
+      <button class="secondary" onclick="toggleScroll()">Play / Pause Scrolling</button>
+      <button class="secondary" onclick="clearLyrics()">Clear Display</button>
+    </div>
+
+    <div class="panel">
+      <label>Display preview</label>
+      <div class="display" id="preview">Your lyrics appear here</div>
+      <p class="status" id="status">Ready — enter your lyrics above.</p>
+    </div>
+  </div>
+
+  <script>
+   function showLyrics() {
+  const lyrics = document.getElementById("lyrics").value.trim();
+  const preview = document.getElementById("preview");
+  const color = document.getElementById("color").value;
+  const speed = document.getElementById("speed").value;
+  const status = document.getElementById("status");
+
+  if (!lyrics) {
+    status.textContent = "Please enter some lyrics first.";
+    return;
+  }
+
+  preview.classList.remove("scrolling");
+  preview.textContent = lyrics;
+  preview.style.color = color;
+
+  const duration = {
+    slow: "16s",
+    normal: "10s",
+    fast: "5s"
+  };
+
+  preview.style.animationDuration = duration[speed];
+  void preview.offsetWidth;
+  preview.classList.add("scrolling");
+
+  status.textContent = "Lyrics scrolling • Speed: " + speed;
+}
+    function clearLyrics() {
+      document.getElementById("lyrics").value = "";
+      document.getElementById("preview").textContent =
+        "Your lyrics appear here";
+      document.getElementById("preview").style.color = "#00ff99";
+      document.getElementById("status").textContent = "Display cleared.";
+    }
+    function toggleScroll() {
+  const preview = document.getElementById("preview");
+
+  if (preview.style.animationPlayState === "paused") {
+    preview.style.animationPlayState = "running";
+  } else {
+    preview.style.animationPlayState = "paused";
+  }
+}
+  </script>
+</body>
+</html>
